@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data name="Aegis Radar" author="Bredroll" description="
+
+Support module for the Aegis Radar Application.
+
+The Aegis system is two parts, this mod, and a windows app that acts
+as a launcher for CC2. When in use, the Aegis desktop app renders an extra
+window showing the location of visible units on the map (the same units you
+ can see from a control screen or the Holomap).
+
+It renders in the same kind of style as an air-traffic control screen and also
+records the movement of units over time to a file on disk that can be played
+back later.
+
+"/>
