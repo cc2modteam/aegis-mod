@@ -25,6 +25,7 @@ end
 
 g_fileid_printed = false
 g_sent_island_locations = false
+g_seen_turrets = {}
 g_current_team = nil
 g_id = math.random(8192)
 
@@ -77,8 +78,7 @@ function output_map_locations()
     end
 
     if not g_sent_island_locations then
-
-
+        g_sent_island_locations = true
         for i = 0, island_count - 1 do
             local island = update_get_tile_by_index(i)
             if island:get() then
@@ -92,7 +92,17 @@ function output_map_locations()
                         island_position:x(),
                         island_position:y(),
                         island_name))
+            end
+        end
+    end
 
+    -- send turret positions and command centers
+    for i = 0, island_count - 1 do
+        local island = update_get_tile_by_index(i)
+        if island:get() then
+            local island_id = island:get_id()
+
+            if g_seen_turrets[island_id] == nil then
                 local command_center_count = island:get_command_center_count()
                 for j = 0, command_center_count - 1 do
                     local command_center_pos_xz = island:get_command_center_position(j)
@@ -102,13 +112,7 @@ function output_map_locations()
                             command_center_pos_xz:y()))
                 end
 
-
                 local turret_spawn_count = island:get_turret_spawn_count()
-
-                if turret_spawn_count > 0 then
-                    g_sent_island_locations = true
-                end
-
                 for k = 0, turret_spawn_count - 1, 1 do
                     local marker_index, is_valid = island:get_turret_spawn(k)
                     local turret_spawn_xz = island:get_marker_position(marker_index)
@@ -118,10 +122,14 @@ function output_map_locations()
                             turret_spawn_xz:y()
                     ))
                 end
+                if turret_spawn_count > 0 then
+                    g_seen_turrets[island_id] = turret_spawn_count
+                end
             end
         end
     end
 end
+
 
 function can_show_unit(vehicle)
     if vehicle:get() then
